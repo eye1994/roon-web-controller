@@ -1,0 +1,136 @@
+.container
+    height: calc(100vh - 48px)
+    width: 100vw
+    position: relative
+    .cover
+        width: 100%
+        position: absolute
+        left: 0
+        top: 0
+        right: 0
+        bottom: 250px
+        background-size: cover
+    .info
+        position: absolute
+        left: 0
+        right: 0
+        bottom: 0
+        width: 100%
+        background: lightgray
+        padding: 20px 50px 50px 450px
+        box-sizing: border-box
+        .song-title
+            font-size: 30px
+            font-weight: bold
+            margin-bottom: 10px
+            color: #333
+        .artis
+            font-size: 20px
+            color: #333
+        .timing
+            display: inline-block
+            padding: 10px 0
+            width: 100%
+            font-size: 13px
+            color: #333
+            .left
+                float: left
+            .right
+                float: right
+        .cover-art
+            width: 360px
+            height: 360px
+            position: absolute
+            left: 50px
+            bottom: 50px
+            z-index: 999
+            img
+                width: 100%
+        .controls
+            display: flex
+            padding: 10px 0
+            font-size: 36px
+            color: #333
+            margin-top: 20px
+            .current-volume
+                display: block
+                float: left
+                font-size: 20px
+                line-height: 36px
+                height: 36px
+                background: #333
+                color: #ffffff
+                margin-right: 20px
+                border-radius: 10px
+                padding: 0 20px
+            .ng-fa-icon
+                margin-right: 20px
+                cursor: pointer
+            .playback-control
+                flex: 1
+.library-header
+    min-height: 50px
+    margin-bottom: 20px
+    padding: 20px 0px
+    position: relative
+    &.has-cover
+        min-height: 200px
+        .title, .subtitle
+            text-align: right
+            padding-right: 280px
+    .back-button
+        position: absolute
+        left: 50px
+        top: 50px
+        font-size: 30px
+        cursor: pointer
+        z-index: 9999
+    .cover
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background-size: cover
+        opacity: 0.6
+    .info
+        z-index: 999
+        position: absolute
+        left: 0
+        right: 0
+        bottom: 0
+        top: 0
+        padding: 50px
+        color: #000000
+    .small-cover
+        position: absolute
+        right: 100px
+        top: 50px
+        height: 150px
+        width: 150px
+        img
+            width: 100%
+    .title
+        font-size: 36px
+        text-align: center
+        line-height: 50px
+    .subtitle
+        font-size: 20px
+        text-align: center
+
+::ng-deep .mat-progress-bar-fill::after
+    background-color: #333
+
+::ng-deep .mat-progress-bar-buffer
+    background: gray
+
+::ng-deep .mat-progress-bar
+    border-radius: 2px
+::ng-deep .mat-tab-label
+    border-color: #333
+::ng-deep .mat-tab-labels
+    background-color: lightgray
+::ng-deep .mat-tab-label-content
+    color: #333333!important
+::ng-deep .mat-ink-bar
+    background-color: #333333!important

@@ -1,0 +1,107 @@
+<mat-tab-group>
+  <mat-tab label="Current Zone" isActive="true">
+    <div *ngIf="currentZone">
+        <div class="container">
+          <div class="cover" *ngIf="currentZone?.now_playing?.artist_image_keys" [ngStyle]="{'background-image':'url(' + getCoverUrl(currentZone?.now_playing?.artist_image_keys[0])+ ')'}"></div>
+          <div class="info">
+            <div class="cover-art" *ngIf="currentZone?.now_playing">
+              <img [src]="getCoverUrl(currentZone.now_playing.image_key)" alt="">
+            </div>
+            <div class="song-title" *ngIf="currentZone?.now_playing">
+                {{ currentZone?.now_playing?.two_line?.line1 }}
+              </div>
+              <div class="artis" *ngIf="currentZone?.now_playing">
+                {{ currentZone?.now_playing?.two_line?.line2 }}
+              </div>
+              <div class="progress-container" *ngIf="currentZone?.now_playing">
+                <div class="timing">
+                  <div class="left">
+                      {{ getMinute(currentZone.now_playing.seek_position) }}:{{ getSeconds(currentZone.now_playing.seek_position) }}
+                  </div>
+                  <div class="right">
+                      {{ getMinute(currentZone.now_playing.length) }}:{{ getSeconds(currentZone.now_playing.length) }}
+                  </div>
+                </div>
+                <mat-progress-bar mode="determinate" [value]="currentZone.now_playing.seek_position / currentZone.now_playing.length * 100 " ></mat-progress-bar>
+              </div>
+              <div class="controls">
+                <div class="playback-control">
+                  <fa-icon [icon]="faStepBackward" (click)="prev()"></fa-icon>
+                  <fa-icon [icon]="faPause" (click)="pause()" *ngIf="currentZone.state !== 'paused' && currentZone.state !== 'stopped'"></fa-icon>
+                  <fa-icon [icon]="faPlay" (click)="play()" *ngIf="currentZone.state == 'paused' || currentZone.state == 'stopped'"></fa-icon>
+                  <fa-icon [icon]="faStepForward" (click)="next()"></fa-icon>
+                </div>
+                <div class="volume-control">
+                  <span class="current-volume">
+                    Volume: {{ currentZone?.outputs[0]?.volume.value }}
+                  </span>
+                  <fa-icon [icon]="faVolumeDown" (click)="volumeDown()"></fa-icon>
+                  <fa-icon [icon]="faVolumeUp" (click)="volumeUp()"></fa-icon>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+  </mat-tab>
+  <mat-tab label="Libray">
+    <div *ngIf="browseResponse" class="browse-container">
+      <div class="library-header" [class.has-cover]="browseResponse.list.image_key">
+        <div class="cover" [ngStyle]="{'background-image':'url(' + getCoverUrl(browseResponse.list.image_key)+ ')'}">
+        </div>
+        <div class="small-cover" *ngIf="browseResponse.list.image_key">
+          <img [src]="getCoverUrl(browseResponse.list.image_key)">
+        </div>
+        <div class="back-button" *ngIf="browseResponse.list.level !== 0">
+          <fa-icon [icon]="faArrowLeft" (click)="loadLibrary({ pop_levels: 1 })"></fa-icon>
+        </div>
+        <div class="info">
+          <div class="title">
+              {{ browseResponse.list.title }}
+            </div>
+            <div class="subtitle">
+              {{ browseResponse.list.subtitle }}
+            </div>
+        </div>
+      </div>
+      <mat-toolbar style="position: fixed; left: 0; bottom: 0; z-index: 999; right: 0;"
+                  *ngIf="browseResponse.list.count > 100">
+        <button mat-raised-button style="margin-right: 20px;" [disabled]="browseResponse.list.display_offset === 0"
+                (click)="prevPage()">
+          Prev
+        </button>
+        <div style="margin-right: 20px; font-size: 16px;">
+         {{ browseResponse.offset }} - {{ browseResponse.offset + 100 }} of {{ browseResponse.list.count }}
+        </div>
+        <button mat-raised-button [disabled]="browseResponse.list.display_offset + browseResponse.items.length >= browseResponse.list.count"
+                (click)="nextPage()">
+          Next
+        </button>
+      </mat-toolbar>
+      <mat-list *ngIf="browseResponse && browseResponse?.items?.length > 0">
+          <span *ngFor="let item of browseResponse.items">
+            <mat-list-item *ngIf="item.input_prompt">
+              <mat-form-field class="example-full-width">
+                <input matInput [placeholder]="item?.input_prompt?.prompt" value="" #promtInput>
+              </mat-form-field>
+              <button mat-raised-button (click)="prevPage()" style="margin-left: 20px;" (click)="search(item.item_key, promtInput.value)">
+                {{ item?.input_prompt?.action }}  
+              </button>
+            </mat-list-item>
+            <mat-list-item (click)="loadLibrary({ item_key: item.item_key })" *ngIf="!item.input_prompt">
+              <mat-icon mat-list-icon>folder</mat-icon>
+              <img style="height: 70px; float: left;" [src]="getCoverUrl(item.image_key, true)" *ngIf=item.image_key>
+              <h4 mat-line>{{ item.title }}</h4>
+              <p mat-line> {{ item.subtitle }}</p>
+          </mat-list-item>
+        </span>
+      </mat-list>
+    </div>
+  </mat-tab>
+  <mat-tab label="Zones">
+    <mat-list *ngIf="zones && zones.length > 0">
+      <mat-list-item *ngFor="let zone of zones" (click)="selectZone(zone.zone_id)">
+        {{ zone.display_name }}
+      </mat-list-item>
+    </mat-list>
+  </mat-tab>
+</mat-tab-group>

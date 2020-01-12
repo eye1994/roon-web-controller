@@ -6,6 +6,7 @@ var core, transport;
 var pairStatus = 0;
 var zoneStatus = [];
 var zoneList = [];
+var path = require('path');
 
 // Change to working directory
 try {
@@ -332,9 +333,24 @@ io.on("connection", function(socket) {
   });
 });
 
-// Web Routes
+// // Web Routes
 app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/public/fullscreen.html");
+  res.sendFile(__dirname + "/angular-ui/dist/roon-web-controller-ui/index.html");
+});
+app.use('/', express.static(path.join(__dirname, 'angular-ui/dist/roon-web-controller-ui')))
+
+
+app.get("/roonapi/getImageSmall", function(req, res) {
+  core.services.RoonApiImage.get_image(
+    req.query.image_key,
+    { scale: "fit", width: 100, height: 100, format: "image/jpeg" },
+    function(cb, contentType, body) {
+      res.contentType = contentType;
+
+      res.writeHead(200, { "Content-Type": "image/jpeg" });
+      res.end(body, "binary");
+    }
+  );
 });
 
 app.get("/roonapi/getImage", function(req, res) {
